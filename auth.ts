@@ -43,7 +43,7 @@ export const config = {
             return {
               id: user.id,
               name: user.name,
-              email: user.email,
+              email: uer.email,
               role: user.role,
             };
           }
