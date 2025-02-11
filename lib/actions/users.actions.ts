@@ -1,4 +1,4 @@
-"user server";
+"use server";
 
 import { signInFormScheme } from "../validators";
 import { signIn, signOut } from "@/auth";
@@ -23,7 +23,7 @@ export async function signInWithCredentials(
       throw error;
     }
 
-    return { success: false, message: "Invalid email or password " };
+    return { success: false, message: "Invalid email or password" };
   }
 }
 
