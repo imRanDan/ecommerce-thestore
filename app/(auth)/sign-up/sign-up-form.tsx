@@ -55,31 +55,31 @@ const SignUpForm = () => {
             defaultValue={signUpDefaultValues.email}
           />
         </div>
-      </div>
-      <div>
-        <Label htmlFor="password">Password</Label>
-        <Input
-          id="password"
-          name="password"
-          type="password"
-          required
-          autoComplete="password"
-          defaultValue={signUpDefaultValues.password}
-        />
-      </div>
-      <div>
-        <Label htmlFor="confirmPassword">Confirm Password</Label>
-        <Input
-          id="confirmPassword"
-          name="confirmPassword"
-          type="password"
-          required
-          autoComplete="confirmPassword"
-          defaultValue={signUpDefaultValues.password}
-        />
-      </div>
-      <div>
-        <SignUpButton />
+        <div>
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            name="password"
+            type="password"
+            required
+            autoComplete="password"
+            defaultValue={signUpDefaultValues.password}
+          />
+        </div>
+        <div>
+          <Label htmlFor="confirmPassword">Confirm Password</Label>
+          <Input
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            required
+            autoComplete="confirmPassword"
+            defaultValue={signUpDefaultValues.password}
+          />
+        </div>
+        <div>
+          <SignUpButton />
+        </div>
       </div>
 
       {data && !data.success && (

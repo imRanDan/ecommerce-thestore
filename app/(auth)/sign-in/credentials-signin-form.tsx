@@ -44,31 +44,31 @@ const CredentialsSignInForm = () => {
             defaultValue={signInDefaultValues.email}
           />
         </div>
-      </div>
-      <div>
-        <Label htmlFor="password">Password</Label>
-        <Input
-          id="password"
-          name="password"
-          type="password"
-          required
-          autoComplete="password"
-          defaultValue={signInDefaultValues.password}
-        />
-      </div>
-      <div>
-        <SignInButton />
-      </div>
+        <div>
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            name="password"
+            type="password"
+            required
+            autoComplete="password"
+            defaultValue={signInDefaultValues.password}
+          />
+        </div>
+        <div>
+          <SignInButton />
+        </div>
 
-      {data && !data.success && (
-        <div className="text-center text-destructive">{data.message}</div>
-      )}
+        {data && !data.success && (
+          <div className="text-center text-destructive">{data.message}</div>
+        )}
 
-      <div className="text-sm text-center text-muted-foreground">
-        Don&apos;t have an account?{" "}
-        <Link href="/sign-up" target="_self" className="link">
-          Sign Up
-        </Link>
+        <div className="text-sm text-center text-muted-foreground">
+          Don&apos;t have an account?{" "}
+          <Link href="/sign-up" target="_self" className="link">
+            Sign Up
+          </Link>
+        </div>
       </div>
     </form>
   );
