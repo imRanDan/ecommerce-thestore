@@ -2,10 +2,28 @@
 
 import { CartItem } from "@/types";
 import { cookies } from "next/headers";
-import { formatError } from "../utils";
+import { formatError, round2 } from "../utils";
 import { auth } from "@/auth";
 import { prisma } from "@/db/prisma";
-import { cartItemSchema } from "../validators";
+import { cartItemSchema, insertCartSchema } from "../validators";
+import { revalidatePath } from "next/cache";
+
+// Calculate the cart prices
+const calcPrice = (items: CartItem[]) => {
+  const itemsPrice = round2(
+      items.reduce((acc, item) => acc + Number(item.price) * item.qty, 0)
+    ),
+    shippingPrice = round2(itemsPrice > 100 ? 0 : 10),
+    taxPrice = round2(0.15 * itemsPrice),
+    totalPrice = round2(itemsPrice + taxPrice + shippingPrice);
+
+  return {
+    itemsPrice: itemsPrice.toFixed(2),
+    shippingPrice: shippingPrice.toFixed(2),
+    taxPrice: taxPrice.toFixed(2),
+    totalPrice: totalPrice.toFixed(2),
+  };
+};
 
 export async function addItemToCart(data: CartItem) {
   try {
@@ -27,19 +45,31 @@ export async function addItemToCart(data: CartItem) {
     const product = await prisma.product.findFirst({
       where: { id: item.productId },
     });
+    if (!product) throw new Error("Product not found");
 
-    // Tests
-    console.log({
-      "Session Cart ID": sessionCartId,
-      "User ID": userId,
-      "Item Requested": item,
-      "Product Found": product,
-    });
+    if (!cart) {
+      //Create a new cart object
+      const newCart = insertCartSchema.parse({
+        userId: userId,
+        items: [item],
+        sessionCartId: sessionCartId,
+        ...calcPrice([item]),
+      });
 
-    return {
-      success: true,
-      message: "Item added to cart",
-    };
+      //Add to the db
+      await prisma.cart.create({
+        data: newCart,
+      });
+
+      //Revalidate the product page
+      revalidatePath(`/product/${product.slug}`);
+
+      return {
+        success: true,
+        message: "Item added to cart",
+      };
+    } else {
+    }
   } catch (error) {
     return {
       success: false,
