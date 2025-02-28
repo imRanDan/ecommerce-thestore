@@ -40,3 +40,5 @@ export function formatError(error: any) {
       : JSON.stringify(error.message);
   }
 }
+
+//Riund number to 2 decimal places
