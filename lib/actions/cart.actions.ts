@@ -145,3 +145,37 @@ export async function getMyCart() {
     taxPrice: cart.taxPrice.toString(),
   });
 }
+
+export async function removeItemFromCart(productId: string) {
+  try {
+    //cart cookie check
+    const sessionCartId = (await cookies()).get("sessionCartId")?.value;
+    if (!sessionCartId) throw new Error("Cart session not found");
+
+    //get product
+    const product = await prisma.product.findFirst({
+      where: { id: productId },
+    });
+    if (!product) throw new Error("Product not found");
+
+    //get user cart
+    const cart = await getMyCart();
+    if (!cart) throw new Error("Cart not found");
+
+    //Check for item
+    const exist = (cart.items as CartItem[]).find(
+      (x) => x.productId === productId
+    );
+    if (!exist) throw new Error("Item not found");
+
+    // Check if only one in ty
+    if (exist.qty === 1) {
+      //Remove item from the cart
+      cart.items = (cart.items as CartItem[]).filter(
+        (x) => x.productId !== exist.productId
+      );
+    }
+  } catch (error) {
+    return { success: false, message: formatError(error) };
+  }
+}
