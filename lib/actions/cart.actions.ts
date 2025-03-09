@@ -174,7 +174,21 @@ export async function removeItemFromCart(productId: string) {
       cart.items = (cart.items as CartItem[]).filter(
         (x) => x.productId !== exist.productId
       );
+    } else {
+      //Decrease the quantity
+      (cart.items as CartItem[]).find((x) => x.productId === productId)!.qty =
+        exist.qty - 1;
     }
+    //update cart in the db
+    await prisma.cart.update({
+      where: { id: cart.id },
+      data: {
+        items: cart.items as Prisma.CartUpdateitemsInput[],
+        ...calcPrice(cart.items as CartItem[]),
+      },
+    });
+
+    revalidatePath(`/product/${product.slug}`);
   } catch (error) {
     return { success: false, message: formatError(error) };
   }
