@@ -189,6 +189,11 @@ export async function removeItemFromCart(productId: string) {
     });
 
     revalidatePath(`/product/${product.slug}`);
+
+    return {
+      success: true,
+      message: `${product.name} was removed from the cart`,
+    };
   } catch (error) {
     return { success: false, message: formatError(error) };
   }
