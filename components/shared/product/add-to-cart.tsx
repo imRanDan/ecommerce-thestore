@@ -5,31 +5,37 @@ import { useRouter } from "next/navigation";
 import { Plus, Minus, Loader } from "lucide-react";
 import { Cart, CartItem } from "@/types";
 import { addItemToCart, removeItemFromCart } from "@/lib/actions/cart.actions";
-import { toast } from "sonner"; // Changed this import
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 import { useTransition } from "react";
 
 const AddToCart = ({ cart, item }: { cart?: Cart; item: CartItem }) => {
   const router = useRouter();
+  const { toast } = useToast();
 
   const [isPending, startTransition] = useTransition();
 
   const handleAddToCart = async () => {
-    startTransition(async () => {
-      const res = await addItemToCart(item);
+    const res = await addItemToCart(item);
 
-      if (!res.success) {
-        toast.error(res.message); // Changed to use toast.error
-        return;
-      }
-
-      toast.success(`${item.name} added to cart`, {
-        // Changed to use toast.success
+    if (!res.success) {
+      toast({
+        variant: "destructive",
         description: res.message,
-        action: {
-          label: "Go to Cart",
-          onClick: () => router.push("/cart"),
-        },
       });
+      return;
+    }
+
+    //Handle success add to cart
+    toast({
+      description: `${item.name} added to cart`,
+      action: (
+        <ToastAction
+          className="bg-primary text-white hover:bg-gray-800"
+          altText="Go to Cart"
+          onClick={() => router.push("/cart")}
+        ></ToastAction>
+      ),
     });
   };
 

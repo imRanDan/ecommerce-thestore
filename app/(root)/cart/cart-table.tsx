@@ -1,6 +1,7 @@
 "use client";
+
 import { useRouter } from "next/router";
-import { useSonner } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 import { useTransition } from "react";
 import { addItemToCart, removeItemFromCart } from "@/lib/actions/cart.actions";
 import { ArrowRight, Loader, Minus, Plus } from "lucide-react";
@@ -18,9 +19,8 @@ import {
 import { Cart } from "@/types";
 
 const CartTable = ({ cart }: { cart?: Cart }) => {
-  const sonner = useSonner();
+  const toast = useToast();
 
-  const { toast } = useSonner();
   const [isPending, startTransition] = useTransition();
   return (
     <>

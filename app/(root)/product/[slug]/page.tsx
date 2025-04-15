@@ -47,7 +47,7 @@ const ProductDetailsPage = async (props: {
               <p>{product.description}</p>
             </div>
           </div>
-          {/* This is the action bolumn */}
+          {/* This is the action column */}
           <div>
             <Card>
               <CardContent className="p-4">
